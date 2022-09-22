@@ -1,6 +1,7 @@
 # SG-Traffic-Telegram
 
 Small telegram project to help drivers in Singapore.
+If you'll like to try it out and give feedbacks, subscribe to it [here!](https://t.me/SG_Traffic_updates)
 
 ## Motivation
 Other than using google maps for commuting, there aren't many sources as to where I can get traffic details. I figured I could try making a telegram channel to inform drivers about the current road situation.
