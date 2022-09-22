@@ -6,6 +6,12 @@ import creds
 
 
 def create_link(df_without_link: pd.DataFrame):
+    """
+    Create a column of Google Maps links from Latitude and Longitude columns
+
+    :param df_without_link: Dataframe with 'Latitude' and 'Longitude'
+    :return: dataframe with 'Link' column
+    """
     df_without_link['Link'] = [f"https://www.google.com/maps/search/?api=1&query={a},{b}"
                                for a, b in zip(df_without_link['Latitude'], df_without_link['Longitude'])]
     return df_without_link
