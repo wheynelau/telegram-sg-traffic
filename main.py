@@ -9,6 +9,7 @@ accident_id = 238
 roadworks_id = 237
 
 
+# These IDs are for future usage if I decide to
 # reserved_id = 232 to 238
 
 def create_link(df_without_link: pd.DataFrame) -> pd.DataFrame:
@@ -21,6 +22,15 @@ def create_link(df_without_link: pd.DataFrame) -> pd.DataFrame:
     df_without_link['Link'] = [f"https://www.google.com/maps/search/?api=1&query={a},{b}"
                                for a, b in zip(df_without_link['Latitude'], df_without_link['Longitude'])]
     return df_without_link
+
+
+def currentTime() -> str:
+    """
+    Returns the string of current time in HH:MM
+    For updating messages
+    :return: string
+    """
+    return f"{datetime.now().hour}:{datetime.now().minute}"
 
 
 def get_traffic_updates(LTA_API=creds.LTA_api) -> pd.DataFrame:
@@ -138,7 +148,8 @@ def parse_dataframe_to_html(parse_dataframe: pd.DataFrame):
     # If roadwork is in columns parse for roadworks
     if "Roadwork" in parse_dataframe['Type'].unique():
         string = f"<strong><u>Roadworks on expressways </u></strong>\n" \
-                 f"<i>Note: This list is only updated every 10 mins. </i>\n\n"
+                 f"<i>Note: This list is only updated every 10 mins. </i>\n" \
+                 f"<i>Last updated: {currentTime()}</i>\n\n"
 
         for count, row in parse_dataframe.iterrows():
             string = string + f"{row['Message']}\n"
@@ -148,7 +159,8 @@ def parse_dataframe_to_html(parse_dataframe: pd.DataFrame):
         different_types = list(parse_dataframe['Type'].unique())
         string = f"<strong><u>Non-Roadwork Incidents</u></strong>\n\n" \
                  f"<i>Note: This list shows all current major incidents and updates every 2 mins if " \
-                 f"updates are present.</i>\n\n"
+                 f"updates are present.</i>" \
+                 f"<i>Last updated: {currentTime()}</i>\n\n"
         for item in different_types:
             string = string + f"<b><u>{item}</u></b>\n"
             item_df = parse_dataframe[parse_dataframe['Type'] == item]
@@ -214,7 +226,8 @@ while True:
     else:
         message_to_send = new_removed_message(new, removed)
         update_pin = parse_dataframe_to_html(major_update)
-        TTB.update_channel("send", text=message_to_send)
+        # trial removing sending messages completely. making it purely by updates
+        # TTB.update_channel("send", text=message_to_send)
         TTB.update_channel('edit', text=update_pin, message_id=accident_id)
 
     initial = update
